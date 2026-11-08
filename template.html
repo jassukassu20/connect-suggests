@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Connect Suggests – Customer Approves (prototype)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f5f2;--panel:#fff;--ink:#14201c;--mut:#5c6a65;--line:#e2e5df;--acc:#0b6e4f;--acc2:#e8f3ee;--warn:#b54708;--warnbg:#fff4e5;--bad:#b42318;--badbg:#fdecea;--blue:#1d4ed8;--bluebg:#eaf0ff;--r:12px}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+header{display:flex;align-items:center;gap:18px;padding:12px 20px;background:#0f1d18;color:#fff;position:sticky;top:0;z-index:5}
+header h1{font-size:16px;margin:0;font-weight:700;letter-spacing:-.01em}header h1 small{font-weight:400;opacity:.6;margin-left:8px;font-size:12px}
+.steps{display:flex;gap:6px;margin-left:auto}.step{padding:5px 10px;border-radius:99px;background:#22332d;font-size:12px;color:#9fb3ab}.step.on{background:#2fbf8a;color:#06241a;font-weight:600}.step.done{background:#1b4d3c;color:#bfe9d6}
+.wrap{display:grid;grid-template-columns:300px 1fr 380px;gap:16px;padding:16px;max-width:1600px;margin:0 auto}
+@media(max-width:1200px){.wrap{grid-template-columns:1fr}.phonecol{order:-1}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.kpi{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px}
+.kpi b{display:block;font-size:20px;letter-spacing:-.02em}.kpi span{font-size:11px;color:var(--mut)}
+.list{max-height:calc(100vh - 380px);overflow:auto;padding:0}.list h4{margin:10px 12px 4px;font-size:11px;text-transform:uppercase;color:var(--mut);letter-spacing:.06em}
+.biz{padding:9px 12px;border-top:1px solid var(--line);cursor:pointer}.biz:hover{background:#fafbf9}.biz.sel{background:var(--acc2);border-left:3px solid var(--acc)}
+.biz .n{font-weight:600;display:flex;justify-content:space-between;gap:6px}.biz .s{font-size:12px;color:var(--mut);margin-top:2px}
+.chip{font-size:10.5px;padding:2px 7px;border-radius:99px;font-weight:600;white-space:nowrap}
+.m-SUGGEST{background:var(--acc2);color:var(--acc)}.m-AUTO_APPLY{background:var(--bluebg);color:var(--blue)}.m-FLAG{background:var(--badbg);color:var(--bad)}.m-QUIET{background:#eef0ec;color:var(--mut)}.m-ASK{background:var(--warnbg);color:var(--warn)}.m-OPTED_OUT{background:#eee;color:#777}
+h2{font-size:20px;margin:0 0 2px;letter-spacing:-.02em}.sub{color:var(--mut);font-size:13px}
+.sec{margin-top:14px}.sec h3{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--mut);margin:0 0 8px;display:flex;align-items:center;gap:8px}
+.num{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--ink);color:#fff;font-size:11px}
+table{width:100%;border-collapse:collapse}td,th{padding:8px 6px;border-top:1px solid var(--line);text-align:left;vertical-align:top}th{font-size:11px;color:var(--mut);font-weight:500;border-top:none}
+tr.it{cursor:pointer}tr.it:hover td{background:#fafbf9}.old{color:var(--bad);text-decoration:line-through;text-decoration-thickness:1px}.new{color:var(--acc);font-weight:600}
+.bar{height:6px;background:#e8ebe6;border-radius:9px;width:70px;overflow:hidden;display:inline-block;vertical-align:middle}.bar i{display:block;height:100%;background:var(--acc)}
+.ev{background:#fafbf9;font-size:12.5px}.ev ul{margin:4px 0;padding-left:18px}.ev li{margin:3px 0}.ev .no{color:var(--mut)}
+.alert{border-radius:10px;padding:10px 12px;margin-top:10px;font-size:13px}.alert.warn{background:var(--warnbg);color:#7a2e0e}.alert.bad{background:var(--badbg);color:#7a1a12}.alert.info{background:var(--bluebg);color:#1e3a8a}
+.btn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 12px;font:inherit;cursor:pointer;font-weight:500}.btn:hover{border-color:#bcc4bd}.btn.pri{background:var(--acc);color:#fff;border-color:var(--acc)}.btn.sm{padding:5px 9px;font-size:12px}
+pre{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:#0f1d18;color:#cfe9dd;padding:10px;border-radius:9px;overflow:auto;max-height:240px;margin:6px 0}
+.phone{width:340px;margin:0 auto;border-radius:38px;background:#111;padding:12px;box-shadow:0 20px 50px rgba(0,0,0,.18)}
+.screen{background:#f2f2f7;border-radius:28px;height:640px;overflow:auto;display:flex;flex-direction:column}
+.sbar{padding:10px 18px 6px;font-size:12px;font-weight:600;display:flex;justify-content:space-between}
+.chan{padding:8px 14px;border-bottom:1px solid #ddd;background:#fafafa;text-align:center;font-size:13px}.chan b{display:block}
+.msgs{padding:12px;display:flex;flex-direction:column;gap:8px;flex:1}
+.bub{max-width:88%;padding:9px 12px;border-radius:18px;white-space:pre-wrap;font-size:13.5px;line-height:1.38}.in{background:#e5e5ea;align-self:flex-start;border-bottom-left-radius:5px}.out{background:#0a84ff;color:#fff;align-self:flex-end;border-bottom-right-radius:5px}
+.wa .in{background:#fff}.wa .screen,.wa.screen{background:#efeae2}.wa .out{background:#d9fdd3;color:#111}
+.bub a{color:inherit;text-decoration:underline;cursor:pointer;word-break:break-all}
+.email{background:#fff;margin:10px;border-radius:12px;padding:14px;font-size:13px}.email h5{margin:0 0 8px;font-size:15px}
+.email .row{padding:7px 0;border-top:1px solid #eee}.ebtns{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.langs{display:flex;gap:4px;justify-content:center;margin:10px 0}.langs button{border:1px solid var(--line);background:#fff;border-radius:7px;padding:3px 9px;cursor:pointer;font:inherit;font-size:12px}.langs button.on{background:var(--ink);color:#fff}
+.owner{background:#fff;flex:1;padding:14px}.owner h4{margin:0 0 4px;font-size:17px}.oit{border:1px solid #e6e6e6;border-radius:12px;padding:10px;margin:8px 0}
+.seg{display:flex;gap:4px;margin-top:6px}.seg button{flex:1;border:1px solid #ddd;background:#fff;border-radius:8px;padding:6px 2px;font:inherit;font-size:12px;cursor:pointer}.seg button.on{background:var(--acc);color:#fff;border-color:var(--acc)}.seg button.no.on{background:#666;border-color:#666}
+.times{display:flex;gap:6px;align-items:center;margin-top:6px;font-size:12px}.times input{font:inherit;padding:4px;border:1px solid #ccc;border-radius:6px;width:92px}
+.log{font-size:12.5px}.log div{padding:6px 0;border-top:1px dashed var(--line)}.log b{color:var(--acc)}
+.pub{display:flex;justify-content:space-between;padding:5px 0;border-top:1px solid var(--line);font-size:13px}.pub span:last-child{color:var(--mut)}
+.muted{color:var(--mut)}.flex{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.right{margin-left:auto}
+.tag{font-size:11px;background:#eef0ec;border-radius:6px;padding:1px 6px;margin-right:3px;color:#43504b}
+.empty{padding:30px;text-align:center;color:var(--mut)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Connect Suggests <small>Customer approves · Since AI 2026 prototype · synthetic data</small></h1>
+  <div class="steps" id="steps"></div>
+</header>
+<div class="wrap">
+  <aside>
+    <div class="kpis" id="kpis"></div>
+    <div class="card list" id="list"></div>
+  </aside>
+  <main><div class="card" id="case"></div><div class="card sec" id="apply" style="display:none"></div><div class="card sec" id="learn"></div></main>
+  <section class="phonecol">
+    <div class="langs" id="langs"></div>
+    <div class="phone"><div class="screen" id="screen"></div></div>
+    <p class="muted" style="text-align:center;font-size:12px;margin-top:10px">Tap the link in the message to open the owner page – no login.</p>
+  </section>
+</div>
+<script>
+const DATA = /*__DATA__*/null;
+const API = window.CONNECT_API || null;   // set by connect_server.py → real Yext writes
+const S = {sel:null, lang:null, view:'msg', step:1, decisions:{}, learned:{}, standing:{}, applied:{}, log:[], season:2026};
+const $ = id => document.getElementById(id);
+const esc = s => String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const nice = h => h==='closed'?'closed':h.split(',').map(iv=>iv.split('-').map(t=>{const [a,b]=t.split(':');return (+a)+(b==='00'?'':'.'+b)}).join('–')).join(', ');
+const WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const fd = s => {const d=new Date(s+'T12:00:00');return `${WD[d.getDay()]} ${d.getDate()}.${d.getMonth()+1}.`};
+const eta = s => s<3600?`~${Math.round(s/60)} min`:s<86400?`~${Math.round(s/3600)} h`:`~${Math.round(s/86400)} d`;
+const MODE = {SUGGEST:'Suggest',AUTO_APPLY:'Auto-apply',FLAG:'Flag to human',QUIET:'Stay quiet',ASK:'Ask',OPTED_OUT:'Opted out'};
+const CH = {SMS:'SMS',WHATSAPP:'WhatsApp',EMAIL:'Email',APP_PUSH:'Connect app'};
+
+function steps(){const n=['Detect','Suggest','Contact','Decide','Apply'];$('steps').innerHTML=n.map((x,i)=>`<span class="step ${S.step===i+1?'on':S.step>i+1?'done':''}">${i+1} ${x}</span>`).join('')}
+
+function kpis(){const k=DATA.kpi, m=k.model;
+ $('kpis').innerHTML=[
+  [k.customers.toLocaleString(),'customers watched (FI · SE · NO)'],[k.messages.toLocaleString(),'owners to contact this season'],
+  [k.suggestions.toLocaleString(),'date suggestions'],[k.views_at_risk.toLocaleString(),'search views at risk'],
+  [m.cv_dev+' / 100',`score (baseline ${m.baseline_dev})`],[m.views_protected+' %',`views protected (base ${m.views_protected_base} %)`],
+  [k.auto,'auto-apply (standing permission)'],[k.flag+' · '+k.quiet,'flagged · stay quiet']
+ ].map(([b,s])=>`<div class="kpi"><b>${b}</b><span>${s}</span></div>`).join('')}
+
+function list(){const c=DATA.cases;let h='<h4>Demo storylines</h4>';
+ const row=id=>{const x=c[id];return `<div class="biz ${S.sel===id?'sel':''}" onclick="pick('${id}')"><div class="n"><span>${esc(x.name)}</span><span class="chip m-${modeOf(id)}">${MODE[modeOf(id)]}</span></div><div class="s">${x.city} · ${x.segment.replace(/_/g,' ')}${x.story?' — '+esc(x.story):''}</div></div>`};
+ const demo=DATA.demo_order.filter(id=>id.includes('-D')), top=DATA.demo_order.filter(id=>!id.includes('-D'));
+ h+=demo.map(row).join('')+'<h4>Highest priority this week (test businesses)</h4>'+top.map(row).join('');
+ $('list').innerHTML=h}
+
+function modeOf(id){const c=DATA.cases[id];if(c.mode==='SUGGEST'&&S.standing[id])return 'AUTO_APPLY';return c.mode}
+
+// learning: owner answers re-shape the next suggestion
+function itemsFor(id){const c=DATA.cases[id];const L=S.learned[id]||{};
+ let items=c.items.map(i=>({...i}));
+ if(S.season>2026){ // next season preview: re-use owner answers
+   items=items.filter(i=>!(L[i.key]&&L[i.key].decision==='REJECTED'));
+   items.forEach(i=>{const l=L[i.key];if(l&&l.hours){i.proposed=l.hours;i.basis='OWNER_PREVIOUS_ANSWER';i.confidence=0.97;i.evidence=[{type:'owner_answer',hours:l.hours,supports:true}].concat(i.evidence)}});
+   items.forEach(i=>{const d=new Date(i.date);d.setFullYear(d.getFullYear()+1);i.date=d.toISOString().slice(0,10)});
+ }
+ return items}
+
+function evText(e){switch(e.type){
+ case 'owner_answer':return `<b>You told us</b>: ${nice(e.hours)} (owner answer, learned)`;
+ case 'ly1':return `Last year (${e.date}) entered: <b>${nice(e.hours)}</b> <span class="tag">${e.source}</span>`;
+ case 'ly2':return `Two years ago (${e.date}): <b>${nice(e.hours)}</b>`;
+ case 'mall':return `Shopping centre <b>${esc(e.name)}</b> published: <b>${nice(e.hours)}</b>`;
+ case 'analytics':return `Analytics ${e.date}: customer actions per view <b>−${e.drop_pct} %</b> vs normal → looked closed while Google said open`;
+ case 'review':return `Review after ${e.date}: “${esc(e.text)}”`;
+ case 'google_edit':return `Google user edit for ${e.date}: ${nice(e.hours)}`;
+ case 'google_edit_now':return `Google user edit for this date: ${nice(e.hours)}`;
+ case 'pilot':return `2025 pilot: owner <b>${e.decision}</b>${e.hours?' → '+nice(e.hours):''}`;
+ case 'peers':return `Peers (${e.segment.replace(/_/g,' ')}, same country & city size): ${e.closed_pct} % of those who entered this day were closed${e.special?', typical special hours '+nice(e.special):''}`;
+ default:return esc(JSON.stringify(e))}}
+
+function caseView(){const id=S.sel,c=DATA.cases[id];if(!c){$('case').innerHTML='<div class="empty">Pick a business</div>';return}
+ const m=modeOf(id), items=m==='FLAG'?[]:itemsFor(id);
+ let h=`<div class="flex"><div><h2>${esc(c.name)}</h2><div class="sub">${id} · ${c.city}, ${c.country} · ${c.segment.replace(/_/g,' ')}${c.mall?' · in '+esc(c.mall):''} · customer since ${c.customer_since}</div></div><span class="chip m-${m} right" style="font-size:12px">${MODE[m]}</span></div>
+ <div class="flex sub" style="margin-top:8px"><span class="tag">contact: ${esc(c.contact.contact_first_name)} · ${CH[c.contact.preferred_channel]||c.contact.preferred_channel} · ${c.contact.preferred_language} · ${c.contact.best_contact_window}</span><span class="tag">history entries: ${c.history_entries}</span>${S.standing[id]||c.contact.standing_permission_holidays==='1'?'<span class="tag">standing permission ✓</span>':''}${S.season>2026?'<span class="tag" style="background:#fff4e5">preview: next season 2027 with learned answers</span>':''}</div>`;
+ if(c.history_entries===0) h+=`<div class="alert info"><b>No history.</b> No exception hours and no previous decisions – Connect falls back to analytics (did customers act as if the place was closed?), peers with the same type / country / city size, and asks an open question when it isn't confident.</div>`;
+ for(const x of c.health){
+  if(x.type==='CLOSED_FOR_GOOD')h+=`<div class="alert bad"><b>Looks closed for good</b> – ${x.reviews} review(s), ${x.google_edits} Google “closed” edit(s)${x.quote?': “'+esc(x.quote)+'”':''}. <b>No holiday message is sent</b>; routed to Fonecta support to verify.</div>`;
+  if(x.type==='REGULAR_HOURS_CHANGED')h+=`<div class="alert warn"><b>Regular hours look outdated</b> – ${x.reviews} review(s): “${esc(x.quote)}”${x.google_edits?' + '+x.google_edits+' Google edit(s)':''}. Proposal: ${x.sunday_closed?'Mon–Sat ':''}${x.proposed_hours?nice(x.proposed_hours):'?'}${x.sunday_closed?', Sun closed':''}.</div>`;
+  if(x.type==='SEASONAL_BREAK')h+=`<div class="alert warn"><b>Seasonal break not published</b> – “${esc(x.quote)}”. Suggest marking closed until spring (Yext <code>reopenDate</code>).</div>`;}
+ h+=`<div class="sec"><h3><span class="num">1</span>Detect – what Google will show wrong &nbsp;<span class="muted" style="text-transform:none;letter-spacing:0">${items.length} date(s), ${Math.round(items.reduce((a,i)=>a+i.views,0))} search views at risk</span></h3>`;
+ if(m==='FLAG') h+=`<div class="empty" style="padding:14px">No holiday suggestions while the business looks closed for good – a human checks first.</div>`;
+ if(!items.length&&m!=='FLAG') h+=`<div class="empty" style="padding:14px">Nothing to change – Connect stays quiet. ${c.asks.length?'':'(Already correct, or not confident enough to bother the owner.)'}</div>`;
+ if(items.length){h+=`<table><tr><th>Date</th><th>Day</th><th>Google shows</th><th><span class="num" style="width:16px;height:16px;font-size:10px">2</span> Suggest</th><th>Confidence</th><th>Views</th></tr>`;
+  items.forEach((i,ix)=>{const dec=S.decisions[id]&&S.decisions[id][i.date];
+   h+=`<tr class="it" onclick="tog(${ix})"><td>${fd(i.date)}</td><td>${esc(i.day_name.en)}</td><td class="old">${nice(i.shown)}</td><td class="new">${nice(i.proposed)}${i.auto?' <span class="chip m-AUTO_APPLY">auto</span>':''}${dec?` <span class="chip m-${dec.decision==='REJECTED'?'QUIET':'SUGGEST'}">${dec.decision}</span>`:''}</td><td><span class="bar"><i style="width:${Math.round(i.confidence*100)}%"></i></span> ${Math.round(i.confidence*100)}%</td><td>${Math.round(i.views)}</td></tr>
+   <tr id="ev${ix}" style="display:none"><td colspan="6" class="ev"><b>Why:</b><ul>${i.evidence.map(e=>`<li class="${e.supports?'':'no'}">${e.supports?'✓':'·'} ${evText(e)}</li>`).join('')}</ul><span class="muted">Model basis: ${esc(i.basis)} · shown now ${nice(i.shown)}</span></td></tr>`});
+  h+='</table>'}
+ if(c.asks.length) h+=`<div class="alert info"><b>Not confident – ask instead of guessing:</b> ${c.asks.map(a=>`${fd(a.date)} ${esc(a.day_name.en)} (best guess ${nice(a.best_guess)}, ${Math.round(a.confidence*100)}%)`).join('; ')}</div>`;
+ h+='</div>';
+ h+=`<div class="sec flex"><button class="btn" onclick="S.season=S.season>2026?2026:2027;render()">${S.season>2026?'← Back to this season':'Preview next season with what Connect learned →'}</button></div>`;
+ $('case').innerHTML=h}
+function tog(ix){const e=$('ev'+ix);e.style.display=e.style.display==='none'?'':'none'}
+
+function msgFor(id){const c=DATA.cases[id];const lang=S.lang||c.contact.preferred_language;return c.messages[lang]||c.messages.en}
+
+function phone(){const id=S.sel,c=DATA.cases[id];if(!c){$('screen').innerHTML='';return}
+ const lang=S.lang||c.contact.preferred_language;
+ $('langs').innerHTML=['fi','sv','nb','en'].map(l=>`<button class="${l===lang?'on':''}" onclick="S.lang='${l}';render()">${l.toUpperCase()}${l===c.contact.preferred_language?' ★':''}</button>`).join('');
+ const ch=c.contact.preferred_channel, m=msgFor(id), wa=ch==='WHATSAPP';
+ const sc=$('screen');sc.className='screen'+(wa?' wa':'');
+ let h=`<div class="sbar"><span>9:41</span><span>●●● 5G</span></div>`;
+ if(S.view==='owner'){h+=ownerPage(id);sc.innerHTML=h;return}
+ h+=`<div class="chan"><b>${ch==='EMAIL'?'Fonecta Connect':'Connect'}</b><span class="muted">${CH[ch]} · sent in contact window ${c.contact.best_contact_window}</span></div>`;
+ const link=t=>esc(t).replace(/(https:\/\/\S+)/g,'<a onclick="openOwner()">$1</a>');
+ const mode=modeOf(id);
+ if(mode==='FLAG'||mode==='OPTED_OUT'||(!m.sms&&!m.health_sms)){
+   h+=`<div class="msgs"><div class="empty">${mode==='FLAG'?'No message to the owner.<br><br>Case created for Fonecta support: “verify whether '+esc(c.name)+' has closed for good”.':mode==='OPTED_OUT'?'Owner opted out of suggestions – nothing is sent.':'Nothing to send – Connect stays quiet.'}</div></div>`;sc.innerHTML=h;return}
+ h+='<div class="msgs">';
+ if(ch==='EMAIL'&&m.email_lines){
+   h+=`<div class="email"><h5>${esc(m.email_subject)}</h5>${esc(m.sms.split('\n').slice(0,2).join(' '))}${m.email_lines.map(l=>`<div class="row">${esc(l)}</div>`).join('')}<div class="ebtns"><button class="btn pri sm" onclick="quickYes()">${esc(m.buttons[0])}</button><button class="btn sm" onclick="openOwner()">${esc(m.buttons[1])}</button><button class="btn sm" onclick="openOwner('no')">${esc(m.buttons[2])}</button></div><div class="muted" style="font-size:11px;margin-top:8px">${esc(m.email_cta)}</div></div>`;
+ } else if(m.sms){ h+=`<div class="bub in">${link(m.sms)}</div>`; }
+ if(m.health_sms) h+=`<div class="bub in">${link(m.health_sms)}</div>`;
+ (S.chat[id]||[]).forEach(b=>h+=`<div class="bub ${b.me?'out':'in'}">${link(b.t)}</div>`);
+ h+='</div>';
+ if(ch!=='EMAIL'&&m.sms&&!S.applied[id]) h+=`<div style="padding:10px;display:flex;gap:6px"><button class="btn sm" onclick="quickYes()">Reply “${({fi:'KYLLÄ',sv:'JA',nb:'JA',en:'YES'})[lang]}”</button><button class="btn sm" onclick="openOwner()">Open link</button></div>`;
+ sc.innerHTML=h; sc.scrollTop=sc.scrollHeight}
+S.chat={};
+
+function ownerPage(id){const c=DATA.cases[id],items=itemsFor(id);const d=S.draft;
+ let h=`<div class="owner"><div class="muted" style="font-size:11px">connect.fonecta.fi/s/AB12CD · secure link, no login</div><h4>${esc(c.name)}</h4><div class="muted" style="font-size:12px;margin-bottom:6px">Check the holiday hours. Nothing is published without your OK.</div>`;
+ items.forEach((i,ix)=>{const x=d[ix];
+  h+=`<div class="oit"><div class="flex"><b>${fd(i.date)} ${esc(i.day_name.local)}</b><span class="right muted" style="font-size:12px">now ${nice(i.shown)}</span></div><div class="new" style="margin-top:3px">→ ${nice(i.proposed)}</div>
+  <div class="seg"><button class="${x.a==='ok'?'on':''}" onclick="setD(${ix},'ok')">✓ Approve</button><button class="${x.a==='edit'?'on':''}" onclick="setD(${ix},'edit')">✎ Edit</button><button class="no ${x.a==='no'?'on':''}" onclick="setD(${ix},'no')">✕ No</button></div>
+  ${x.a==='edit'?`<div class="times"><label><input type="checkbox" ${x.closed?'checked':''} onchange="S.draft[${ix}].closed=this.checked;phone()"> closed</label>${x.closed?'':`<input type="time" value="${x.o}" onchange="S.draft[${ix}].o=this.value">–<input type="time" value="${x.c}" onchange="S.draft[${ix}].c=this.value">`}</div>`:''}</div>`});
+ h+=`<label style="display:flex;gap:8px;font-size:12.5px;margin:10px 2px"><input type="checkbox" id="perm" ${S.permDraft?'checked':''} onchange="S.permDraft=this.checked"> Handle public holidays like this from now on without asking (you'll always be told first and can undo)</label>
+ <button class="btn pri" style="width:100%" onclick="submitOwner()">Save</button> <button class="btn" style="width:100%;margin-top:6px" onclick="S.view='msg';phone()">Back</button></div>`;
+ return h}
+
+function openOwner(all){const id=S.sel;S.draft=itemsFor(id).map(i=>{const sp=i.proposed==='closed'?['10:00','14:00']:[i.proposed.split(',')[0].split('-')[0],i.proposed.split(',').slice(-1)[0].split('-')[1]];return {a:all==='no'?'no':'ok',closed:i.proposed==='closed',o:sp[0],c:sp[1]}});S.permDraft=false;S.view='owner';S.step=4;render()}
+function setD(ix,a){S.draft[ix].a=a;phone()}
+function quickYes(){openOwner();submitOwner()}
+
+async function submitOwner(){const id=S.sel,c=DATA.cases[id],items=itemsFor(id);
+ const lang=S.lang||c.contact.preferred_language;
+ S.decisions[id]=S.decisions[id]||{};S.learned[id]=S.learned[id]||{};
+ const writes=[];
+ items.forEach((i,ix)=>{const x=S.draft[ix];let dec,hours=null;
+  if(x.a==='ok'){dec='ACCEPTED';hours=i.proposed}else if(x.a==='edit'){hours=x.closed?'closed':`${x.o}-${x.c}`;dec=hours===i.proposed?'ACCEPTED':'EDITED'}else dec='REJECTED';
+  S.decisions[id][i.date]={decision:dec,hours};
+  S.learned[id][i.key]={decision:dec,hours};
+  if(hours)writes.push({date:i.date,hours,from:i.shown,basis:i.basis,confidence:i.confidence});
+  S.log.unshift({t:`<b>${c.name}</b> · ${fd(i.date)} ${i.day_name.en}: ${dec}${dec==='EDITED'?' → '+nice(hours)+' (was suggested '+nice(i.proposed)+')':''}`,
+   learn:dec==='EDITED'?`Next ${i.day_name.en}: suggest owner's ${nice(hours)} instead of the model`:dec==='REJECTED'?`Don't suggest ${i.day_name.en} again for this business; lower weight of “${i.basis}” for similar owners`:`Pattern confirmed – eligible for standing permission`})});
+ if(S.permDraft){S.standing[id]=true;S.log.unshift({t:`<b>${c.name}</b>: granted standing permission for public holidays`,learn:'Next season: apply confident repeat patterns first, then inform'})}
+ S.view='msg';S.step=5;
+ S.chat[id]=S.chat[id]||[];S.chat[id].push({me:true,t:({fi:'KYLLÄ',sv:'JA',nb:'JA',en:'YES'})[lang]+(writes.length<items.length?' (edited)':'')});
+ await applyWrites(id,writes,lang);render()}
+
+async function applyWrites(id,writes,lang){const c=DATA.cases[id];
+ let res=null;
+ if(API&&writes.length){try{res=await (await fetch(API+'/api/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({entityId:id,writes})})).json()}catch(e){res={error:String(e)}}}
+ const payload={hours:{holidayHours:writes.map(w=>w.hours==='closed'?{date:w.date,isClosed:true}:{date:w.date,openIntervals:w.hours.split(',').map(iv=>({start:iv.split('-')[0],end:iv.split('-')[1]}))})}};
+ const pubs=((res&&res.listings)||c.listings).filter(l=>l.status==='LIVE'||l.status==='WAITING_ON_PUBLISHER');
+ S.applied[id]={writes,payload,res,pubs};
+ const where=pubs.slice(0,4).map(p=>`${p.publisherName.split(' (')[0]} ${eta(p.typicalUpdateSpeedSeconds)}`).join(', ');
+ const m=msgFor(id), first=c.contact.contact_first_name;
+ if(writes.length)S.chat[id].push({t:m.confirm_tpl.replace('{where}',where).replace('{first}',first)});
+ else S.chat[id].push({t:({fi:'Selvä, emme muuta mitään. Kiitos!',sv:'Okej, vi ändrar ingenting. Tack!',nb:'Greit, vi endrer ingenting. Takk!',en:"OK, we won't change anything. Thanks!"})[lang]});
+ if(writes.length&&!S.standing[id]&&c.contact.standing_permission_holidays!=='1')S.chat[id].push({t:m.standing_tpl})}
+
+function applyView(){const id=S.sel,a=S.applied[id];if(!a){$('apply').style.display='none';return}
+ $('apply').style.display='';
+ $('apply').innerHTML=`<h3 class="sec" style="margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--mut)"><span class="num">5</span> Apply – written to Connect's backend (Yext Knowledge Graph)</h3>
+ ${a.writes.length?`<div class="sub">${API?(a.res&&!a.res.error?'✓ Live write to '+esc(a.res.base)+' – HTTP '+a.res.status:'⚠ '+esc(a.res&&a.res.error)):'Static demo: this is the exact request connect_server.py sends (mock or sandbox, same code).'}</div>
+ <pre>PUT /v2/accounts/me/entities/${id}?v=20261101
+${esc(JSON.stringify(a.payload,null,1))}</pre>
+ <div class="sub" style="margin:8px 0 4px">Owner confirmation – where the new hours show:</div>${a.pubs.map(p=>`<div class="pub"><span>${esc(p.publisherName)}</span><span>${p.status==='LIVE'||p.status==='WAITING_ON_PUBLISHER'?eta(p.typicalUpdateSpeedSeconds):p.status}</span></div>`).join('')}
+ <div class="sub" style="margin-top:8px">Audit trail: every write keeps date, old value, new value, basis, confidence and owner decision.</div>`:'<div class="sub">Owner declined everything – nothing written. The owner has the last word.</div>'}`}
+
+function learnView(){$('learn').innerHTML=`<h3 style="margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--mut)">Learning log – what Connect remembers</h3>
+ ${S.log.length?`<div class="log">${S.log.slice(0,12).map(l=>`<div>${l.t}<br><span class="muted">↳ ${l.learn}</span></div>`).join('')}</div>`:'<div class="muted" style="font-size:13px">Approve, edit or decline in the phone → decisions appear here and change next season\'s suggestion (try “Edit”, then “Preview next season”).</div>'}`}
+
+function pick(id){S.sel=id;S.lang=null;S.view='msg';S.season=2026;S.step=S.applied[id]?5:3;render()}
+function render(){steps();list();caseView();phone();applyView();learnView()}
+kpis();pick(DATA.demo_order[0]);
+</script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+1
+00:00:01,055 --> 00:00:02,162
+It's Christmas Day.
+
+2
+00:00:02,182 --> 00:00:04,704
+Google says your favourite café is open.
+
+3
+00:00:04,809 --> 00:00:07,199
+You drive there… and the door is locked.
+
+4
+00:00:07,651 --> 00:00:10,636
+Busy owners forget to update their holiday hours.
+
+5
+00:00:10,656 --> 00:00:12,352
+In Fonecta's challenge data,
+
+6
+00:00:12,372 --> 00:00:17,060
+almost half of all holiday listings will show the wrong hours this season.
+
+7
+00:00:18,021 --> 00:00:19,856
+So we built Connect Suggests.
+
+8
+00:00:20,009 --> 00:00:22,914
+Before every holiday, Connect checks every listing.
+
+9
+00:00:22,934 --> 00:00:26,527
+When the hours will be wrong, the owner gets one short message,
+
+10
+00:00:26,547 --> 00:00:28,991
+with the right hours and the reason why.
+
+11
+00:00:29,094 --> 00:00:29,550
+One tap.
+
+12
+00:00:29,570 --> 00:00:32,039
+And it's live everywhere people search.
+
+13
+00:00:32,191 --> 00:00:33,268
+Connect suggests.
+
+14
+00:00:33,288 --> 00:00:34,858
+The customer approves.
+
+15
+00:00:36,315 --> 00:00:37,319
+Let me show you.
+
+16
+00:00:37,339 --> 00:00:40,071
+This is Kahvila Aurora, a café in Helsinki.
+
+17
+00:00:40,091 --> 00:00:44,593
+Aleksi hasn't entered any holiday hours, so four days will be wrong.
+
+18
+00:00:44,845 --> 00:00:49,298
+Connect works out the right hours from real clues: what he did last year,
+
+19
+00:00:49,318 --> 00:00:50,646
+what similar cafés do.
+
+20
+00:00:50,666 --> 00:00:55,059
+And one signal most people miss: on days a business was secretly closed,
+
+21
+00:00:55,079 --> 00:00:56,836
+customer clicks drop by half.
+
+22
+00:00:56,856 --> 00:01:00,376
+So we spot closures, even when the owner never told us.
+
+23
+00:01:00,628 --> 00:01:04,597
+Aleksi gets one text, in his own language, at the time he prefers.
+
+24
+00:01:04,950 --> 00:01:06,107
+No login. No app.
+
+25
+00:01:06,127 --> 00:01:10,675
+This year he closes at 12 on Christmas Eve, so he just changes it.
+
+26
+00:01:10,695 --> 00:01:14,167
+And he lets Connect handle holidays from now on.
+
+27
+00:01:14,319 --> 00:01:14,634
+Done.
+
+28
+00:01:14,654 --> 00:01:19,056
+The change goes through the Yext API that Connect already runs on,
+
+29
+00:01:19,076 --> 00:01:23,045
+and Aleksi sees exactly where it goes live, and how fast.
+
+30
+00:01:23,297 --> 00:01:24,113
+And it learns.
+
+31
+00:01:24,133 --> 00:01:27,628
+Next Christmas, his own answer comes back automatically.
+
+32
+00:01:27,941 --> 00:01:31,521
+A brand-new customer with zero history? Connect still helps.
+
+33
+00:01:31,541 --> 00:01:34,811
+And when it isn't sure, it asks instead of guessing.
+
+34
+00:01:34,912 --> 00:01:39,154
+And if reviews say a business has closed for good, Connect sends nothing.
+
+35
+00:01:39,174 --> 00:01:40,609
+A person checks first.
+
+36
+00:01:42,673 --> 00:01:46,585
+Across all 3,000 Connect customers in the challenge data,
+
+37
+00:01:46,605 --> 00:01:50,204
+that's 2,700 owners helped, with one message each.
+
+38
+00:01:50,360 --> 00:01:53,683
+Tested on businesses the model had never seen,
+
+39
+00:01:53,703 --> 00:01:56,300
+it protects 69% of at-risk searches.
+
+40
+00:01:56,320 --> 00:01:58,723
+Copying last year protects 57%.
+
+41
+00:01:58,981 --> 00:02:03,572
+For Fonecta, that means customers who see Connect working for them, and stay.
+
+42
+00:02:03,592 --> 00:02:07,814
+And the same loop works for review replies, posts and opening hours.
+
+43
+00:02:08,071 --> 00:02:09,116
+Connect suggests.
+
+44
+00:02:09,136 --> 00:02:10,494
+The customer approves.
+
+45
+00:02:10,514 --> 00:02:13,170
+And nobody walks to a closed door again.
+

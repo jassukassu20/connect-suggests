@@ -1,0 +1,7 @@
+work/*.parquet
+work/audit.jsonl
+work/ranker.txt
+video/*.webm
+video/*.png
+__pycache__/
+.env
